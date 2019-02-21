@@ -1,16 +1,11 @@
 @import "reset";
 @import "typography";
 
-$primary-color: #ca774a;
+$primary-color:#ca774a;
 $body-font: "Jost";
 $body-size: 24px;
 $mq-large: 800px;
 $mq-medium: 600px;
-
-
-@mixin drop-shadow($color) {
-    box-shadow:  0 0 10px $color;
-}
 
 @mixin mq($width) {
     @media (max-width: $width) {
@@ -44,7 +39,6 @@ section {
         font-size: 16px;
 
     }
-
 
     p {
         margin: 24px 0 0 0;
