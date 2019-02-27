@@ -6,6 +6,8 @@ var imagemin = require("gulp-imagemin") //minify images
 
 var browserSync = require('browser-sync').create()
 
+var ghpages = require("gh-pages") //publish/deploy to github pages
+
 sass.compiler = require('node-sass');
 
 //this is a one off
@@ -60,6 +62,12 @@ gulp.task("watch", function (){
     gulp.watch("src/fonts/*", gulp.series("fonts")) //if any fomts get added, display automatically
     gulp.watch("src/img/*", gulp.series("images"))
 })  
+
+//not in defualy task as it may break the page as you don't want it to go directly to site 
+//incase it breaks
+gulp.task("deploy", function(){
+    ghpages.publish("dist")
+})
 
 
 //run default task - on load
