@@ -88,6 +88,13 @@ gulp.task("deploy", function(){
 })
 
 
+function build() {
+    return gulp.series(
+        clean
+    )();
+}
+
+
 //run default task - on load
 gulp.task('default', gulp.series("html","css", "watch", "fonts", "images"));
 
