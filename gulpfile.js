@@ -1,18 +1,38 @@
 var gulp = require('gulp')
-var sass = require('gulp-sass') //track sass
+
+//css
 var cleanCss = require('gulp-clean-css') //clean up minify sass
+var postcss = require("gulp-postcss")
 var sourcemaps = require("gulp-sourcemaps") //debug to view what line
+
+
 var imagemin = require("gulp-imagemin") //minify images
 
-var browserSync = require('browser-sync').create()
+var browserSync = require('browser-sync').create() //browser refresh
 
-sass.compiler = require('node-sass');
+var ghpages = require("gh-pages") //publish/deploy to github pages
+
+var concat = require("gulp-concat") //concat multiple Ccs files into app.css
+
 
 //this is a one off
-    gulp.task("sass", function() {
-        return gulp.src("src/css/app.scss")
+    gulp.task("css", function() {
+        return gulp.src([
+            "src/css/reset.css",
+            "src/css/typography.css",
+            "src/css/app.css"
+        ])
         .pipe(sourcemaps.init())
-        .pipe(sass())
+        .pipe(
+            postcss([
+                require("autoprefixer"),
+                require("postcss-preset-env")({
+                    stage:1,
+                    browsers: ["IE 11", "last 2 versions"]
+                })
+            ])
+        )
+        .pipe(concat("app.css"))
         .pipe(
             cleanCss({
                 compatibility: 'ie8'
@@ -56,14 +76,20 @@ gulp.task("watch", function (){
             }
         });
     gulp.watch("src/*.html", gulp.series("html")).on("change", browserSync.reload)
-    gulp.watch("src/css/app.scss", gulp.series("sass"))
+    gulp.watch("src/css/*", gulp.series("css"))
     gulp.watch("src/fonts/*", gulp.series("fonts")) //if any fomts get added, display automatically
     gulp.watch("src/img/*", gulp.series("images"))
 })  
 
+//not in defualy task as it may break the page as you don't want it to go directly to site 
+//incase it breaks
+gulp.task("deploy", function(){
+    ghpages.publish("dist")
+})
+
 
 //run default task - on load
-gulp.task('default', gulp.series("html","sass", "watch", "fonts", "images"));
+gulp.task('default', gulp.series("html","css", "watch", "fonts", "images"));
 
     
 
